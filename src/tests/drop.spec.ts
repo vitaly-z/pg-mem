@@ -128,6 +128,19 @@ describe('Drop', () => {
         expectQueryError(() => none(`select my_function()`), /function my_function\(\) does not exist/);
     });
 
+
+    it('drops a function if exists -> when not existing', () => {
+        none(`drop function if exists my_function;`);
+    });
+
+    it('drops a function if exists -> when existing', () => {
+        db.registerLanguage('sql', () => () => '42');
+        none(`create function my_function() returns text as $$select '42'$$ language sql;
+            drop function if exists my_function;`);
+
+        expectQueryError(() => none(`select my_function()`), /function my_function\(\) does not exist/);
+    });
+
     it('drops the right overload', () => {
         db.registerLanguage('sql', code => () => code.code);
         expect(many(`

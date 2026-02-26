@@ -569,6 +569,7 @@ export class DbSchema implements _ISchema, ISchema {
             return (this.db.getSchema(fn.name.schema) as DbSchema).dropFunction(fn);
         }
         const fns = this.fns.getOverloads(fn.name.name);
+        ignore(fn.ifExists);
 
         // === determine which function to delete
         let toRemove: _FunctionDefinition;
